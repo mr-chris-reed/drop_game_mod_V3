@@ -33,6 +33,10 @@ dropping = False
 gameBeganAt = 0
 timer = 0
 
+frameTimer = 0 # used to help get correct sprite image
+frameNumber = 0 # used as an index into sprite sheet to get correct sprite
+wasMovingToTheLeft = True # boolean used to help when left or right button is not pressed
+
 player = {
   "x" : windowWidth / 2,
   "y" : 0,
@@ -41,10 +45,45 @@ player = {
   "vy" : 5
 }
 
+def setFrameNumber():
+
+  global leftDown, frameNumber
+  if frameTimer % 20 == 0: # time to get next sprite frame
+    # if moving to right and was moving to right
+    if rightDown and not(wasMovingToTheLeft):
+      if frameNumber > 4:
+        frameNumber = 0
+      else:
+        frameNumber += 1
+    # if moving to right and was moving left
+    if rightDown and wasMovingToTheLeft:
+      frameNumber = 0
+    # if moving to left and was moving to left
+    if leftDown and wasMovingToTheLeft:
+      if frameNumber > 9:
+        frameNumber = 5
+      else:
+        frameNumber += 1
+    # if moving to left and was moving to right
+    if leftDown and not(wasMovingToTheLeft):
+      frameNumber = 5
+    # if not moving and was moving to the right
+    if not(leftDown) and not(rightDown) and not(wasMovingToTheLeft):
+      if frameNumber > 4:
+        frameNumber = 0
+      else:
+        frameNumber += 1
+    # if not moving and was moving to the left
+    if not(leftDown) and not(rightDown) and wasMovingToTheLeft:
+      if frameNumber > 9:
+        frameNumber = 5
+      else:
+        frameNumber += 1
+
 def drawPlayer():
 
   hitbox = pygame.draw.rect(surface, (0,0,0), (player["x"], player["y"], player["width"], player["height"])) # defined this rectangle as a hitbox variable
-  surface.blit(player_sprite_sheet, hitbox, (16, 0, 32, 64))
+  surface.blit(player_sprite_sheet, hitbox, (16 + 64 * frameNumber, 0, 32, 64))
 
 def movePlayer():
   
@@ -55,8 +94,8 @@ def movePlayer():
 
   if surface.get_at(( int(player["x"]), int(player["y"]) + player["height"])) == (0,0,0,255):
     leftOfPlayerOnPlatform = False
-
-  if surface.get_at(( int(player["x"]) + player["width"] - 22, int(player["y"]) + player["height"] - 39)) == (0,0,0,255): # subtracted 22 and 39 to account for different height/width from original
+  
+  if surface.get_at(( int(player["x"]) + (player["width"] - 22), (int(player["y"]) + 39) + (player["height"] - 39))) == (0,0,0,255): # modified based on original width and height settings
     rightOfPlayerOnPlatform = False
 
   if leftOfPlayerOnPlatform is False and rightOfPlayerOnPlatform is False and (player["y"] + player["height"]) + player["vy"] < windowHeight:
@@ -161,8 +200,10 @@ while True:
 
       if event.key == pygame.K_LEFT:
         leftDown = True
+        wasMovingToTheLeft = True
       if event.key == pygame.K_RIGHT:
         rightDown = True
+        wasMovingToTheLeft = False
       if event.key == pygame.K_ESCAPE:
         quitGame()
 
@@ -187,6 +228,7 @@ while True:
     movePlatforms()
     drawPlatforms()
     movePlayer()
+    setFrameNumber()
     drawPlayer()
 
   elif gameEnded is True:
@@ -201,4 +243,5 @@ while True:
     createPlatform()
 
   clock.tick(60)
+  frameTimer += 1 # increment frameTimer
   pygame.display.update()

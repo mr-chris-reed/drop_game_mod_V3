@@ -244,4 +244,5 @@ while True:
 
   clock.tick(60)
   frameTimer += 1 # increment frameTimer
+  print(str(platformsDroppedThrough)) # figuring out what this variable does
   pygame.display.update()

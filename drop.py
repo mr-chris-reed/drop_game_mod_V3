@@ -237,7 +237,7 @@ while True:
     # Draw game over screen
     surface.blit(game_over_image, (0, 150))
     # show score - number of platforms traversed
-    font = pygame.font.Font("assets/ZenDots-Regular.ttf", 32)
+    font = pygame.font.Font("assets/ZenDots-Regular.ttf", 32) # load font from asset folder - can get fonts from Google fonts
     score = font.render("High Score: " + str(platformsDroppedThrough), True, (255, 255, 255))
     surface.blit(score, (50, 250))
 

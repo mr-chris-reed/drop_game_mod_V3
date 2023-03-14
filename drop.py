@@ -48,7 +48,7 @@ player = {
 def setFrameNumber():
 
   global leftDown, frameNumber
-  if frameTimer % 20 == 0: # time to get next sprite frame
+  if frameTimer % 10 == 0: # time to get next sprite frame
     # if moving to right and was moving to right
     if rightDown and not(wasMovingToTheLeft):
       if frameNumber > 4:
@@ -67,6 +67,7 @@ def setFrameNumber():
     # if moving to left and was moving to right
     if leftDown and not(wasMovingToTheLeft):
       frameNumber = 5
+    """
     # if not moving and was moving to the right
     if not(leftDown) and not(rightDown) and not(wasMovingToTheLeft):
       if frameNumber > 4:
@@ -79,6 +80,7 @@ def setFrameNumber():
         frameNumber = 5
       else:
         frameNumber += 1
+    """
 
 def drawPlayer():
 
@@ -234,6 +236,10 @@ while True:
   elif gameEnded is True:
     # Draw game over screen
     surface.blit(game_over_image, (0, 150))
+    # show score - number of platforms traversed
+    font = pygame.font.Font("assets/ZenDots-Regular.ttf", 32)
+    score = font.render("High Score: " + str(platformsDroppedThrough), True, (255, 255, 255))
+    surface.blit(score, (50, 250))
 
   else :
     # Welcome Screen
@@ -244,5 +250,5 @@ while True:
 
   clock.tick(60)
   frameTimer += 1 # increment frameTimer
-  print(str(platformsDroppedThrough)) # figuring out what this variable does
+  # print(str(platformsDroppedThrough)) # figuring out what this variable does
   pygame.display.update()

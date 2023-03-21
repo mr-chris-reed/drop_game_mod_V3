@@ -1,3 +1,8 @@
+"""
+This program is based on the original program 'just_drop.py'
+by Sean M. Tracey from the book 'Make Games with Python"
+"""
+
 import pygame, sys, random
 import pygame.locals as GAME_GLOBALS
 import pygame.event as GAME_EVENTS
